@@ -6,94 +6,81 @@
 /*   By: aducimet <aducimet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/07 16:26:15 by aducimet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/12/21 16:56:32 by aducimet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/01/25 17:05:50 by aducimet    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "FdF.h"
+#include "fdf.h"
 #include "../libft/libft.h"
 #include <fcntl.h>
 
-int count_line(int fd1)
+int	count_line(int fd1)
 {
-    int ret;
-    int count;
-    char *line;
+	int		ret;
+	int		count;
+	char	*line;
 
-    count = 0;
-    while ((ret = get_next_line(fd1, &line)) > 0)
-    {   
-        free(line);
-        count++;
-    }
-    return (count);
+	count = 0;
+	while ((ret = get_next_line(fd1, &line)) > 0)
+	{
+		free(line);
+		count++;
+	}
+	return (count);
 }
 
-int     coord_to_coord (t_fdf *fdf, int fd, int fd1)
+int	coord_to_coord(t_fdf *fdf, int fd, int fd1)
 {
-    char    *line;
-    int     ret;
-    int     index;
-    int     count;
-	int 	len;
-	char 	**tmp;
-	int 	x;
+	char	*line;
+	int		len;
+	char	**tmp;
+	int		index;
+	int		count;
 
-    line = NULL;
-	tmp = NULL;
-    ret = 0;
-    index = 0;
+	index = 0;
 	count = count_line(fd1);
-    if (!(fdf->map->coord = (t_point **)malloc(sizeof(t_point *) * (count))))
-        return (-1);
-    while ((ret = get_next_line(fd, &line)) > 0)
-    {   
-			tmp = ft_strsplit(line, ' ');
-			x = 0;
-			while (tmp[x])	
-				x++;
-			if (!(fdf->map->coord[index] = (t_point *)malloc(sizeof(t_point) * (x))))
-				return (-1);
-			len = 0;
-			while (tmp[len])
-			{	
-                fdf->map->coord[index][len].x = len;
-                fdf->map->coord[index][len].y = index;
-				fdf->map->coord[index][len].z = (int)ft_atoi(tmp[len]);
-                //printf("x = %f y = %f z = %f\n", fdf->map->coord[index][len].x, fdf->map->coord[index][len].y,fdf->map->coord[index][len].z);
-				len++;
-			}
-			index++;
-    }
-    fdf->map->size.x = len;
-    fdf->map->size.y = index;
-    if (ret == 0)
-        return (0);
-    return (1);
+	if (!(fdf->map->coord = (t_point_3d **)malloc(sizeof(t_point_3d *) *
+					(count))))
+		return (-1);
+	while ((get_next_line(fd, &line)) > 0)
+	{
+		tmp = ft_strsplit(line, ' ');
+		free(line);
+		malloc_t_point(len, &fdf, index);
+		len = 0;
+		while (tmp[len])
+			ft_parse(&fdf, index, len++, tmp);
+		index++;
+		ft_2dstrdel(&tmp);
+	}
+	fdf->map->size.x = len;
+	fdf->map->size.y = count;
+	return (0);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    int     fd;
-    int     ret;
-    int     fd1;
-    t_fdf   *fdf;
+	int		fd;
+	int		ret;
+	int		fd1;
+	t_fdf	*fdf;
 
-    ret = 0;
-    if (argc == 2)
-    {   
-        if ((fd = open(argv[1], O_RDONLY)) < 0 || (fd1 = open(argv[1], O_RDONLY)) < 0)
-            return (-1);
-        if ((fdf = define_fdf()) == NULL)
-            return(-1);
-        while ((ret = coord_to_coord(fdf, fd, fd1)) > 0)
+	if (argc == 2)
+	{
+		if ((fd = open(argv[1], O_RDONLY)) < 0 ||
+				(fd1 = open(argv[1], O_RDONLY)) < 0)
+			return (-1);
+		if ((fdf = define_fdf()) == NULL)
+			return (-1);
+		while ((ret = coord_to_coord(fdf, fd, fd1)) > 0)
 			;
-        ft_convert(&fdf);
-    }
-    else if (argc != 2)
-    {
-        ft_putendl("Usage ./FdF need one argument.");
-    }
-    return (0);
+		ft_convert(&fdf);
+		mlx_hook(fdf->win_ptr, 2, (1L << 0), ft_keypress, &fdf);
+		mlx_mouse_hook(fdf->win_ptr, ft_mousepress, &fdf);
+		mlx_loop(fdf->mlx_ptr);
+	}
+	else
+		ft_putendl("Usage ./FdF need one argument.");
+	return (0);
 }

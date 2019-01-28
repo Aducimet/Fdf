@@ -6,57 +6,60 @@
 /*   By: aducimet <aducimet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/12/19 17:40:28 by aducimet     #+#   ##    ##    #+#       */
-/*   Updated: 2018/12/21 17:06:21 by aducimet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/01/23 15:43:08 by aducimet    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#include "FdF.h"
+#include "fdf.h"
 #include "../libft/libft.h"
 
-t_vector    define_vector(float x, float y)
+t_point_3d	define_point_3d(int x, int y, int z)
 {
-    t_vector    vector;
+	t_point_3d	point;
 
-    vector.xV = x;
-    vector.yV = y;
-    return (vector);
+	point.x = x;
+	point.y = y;
+	point.z = z;
+	return (point);
 }
 
-t_map       *define_map(void)
+t_point_2d	define_point_2d(float x, float y)
 {
-    t_map   *map;
+	t_point_2d	point;
 
-    if (!(map = (t_map *)malloc(sizeof(t_map))))
-		  return (NULL);
-    map->coord = NULL;
-    return (map);
+	point.x = x;
+	point.y = y;
+	return (point);
 }
 
-t_fdf       *define_fdf(void)
+t_vector	define_vector(float x, float y)
 {
-    t_fdf  *fdf;
+	t_vector	vector;
 
-    if (!(fdf = (t_fdf *)malloc(sizeof(t_fdf))))
-		  return (NULL);
-    fdf->pixel = define_pixel();
-    fdf->map = define_map();
-    fdf->mlx_ptr = NULL;
-    fdf->win_ptr = NULL;
-    fdf->x_vector = define_vector(1, 0);
-    fdf->y_vector = define_vector(0, 1);
-    fdf->z_vector = define_vector(0.5, -0.5);
-    fdf->scale = 1;
-    return (fdf);
+	vector.xv = x;
+	vector.yv = y;
+	return (vector);
 }
 
-t_pixel     *define_pixel(void)
+t_map		*define_map(void)
 {
-    t_pixel     *pixel;
+	t_map	*map;
 
-    if (!(pixel = malloc(sizeof(t_pixel))))
-		return (0);
-    pixel->xP = 0;
-    pixel->yP = 0;
-    return (pixel);
+	if (!(map = (t_map *)malloc(sizeof(t_map))))
+		return (NULL);
+	map->coord = NULL;
+	return (map);
+}
+
+t_img		*define_img(void *mlx_ptr, int win_size_x, int win_size_y)
+{
+	t_img	*img;
+
+	if (!(img = (t_img *)malloc(sizeof(t_img))))
+		return (NULL);
+	img->ptr_img = mlx_new_image(mlx_ptr, win_size_x, win_size_y);
+	img->tab = (int*)mlx_get_data_addr(img->ptr_img, &(img->bpp),
+			&(img->s_l), &(img->endian));
+	return (img);
 }

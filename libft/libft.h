@@ -6,7 +6,7 @@
 /*   By: aducimet <aducimet@student.le-101.fr>      +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2018/10/04 15:01:03 by calin        #+#   ##    ##    #+#       */
-/*   Updated: 2018/12/06 14:42:01 by aducimet    ###    #+. /#+    ###.fr     */
+/*   Updated: 2019/01/07 18:18:47 by aducimet    ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -16,7 +16,7 @@
 # include <unistd.h>
 # include <string.h>
 # include <stdlib.h>
-# include "../srcs/FdF.h"
+# include "../srcs/fdf.h"
 # include "get_next_line.h"
 
 typedef struct		s_list
